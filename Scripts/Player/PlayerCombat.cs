@@ -1,6 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.Design;
 using Forge.Core;
 using Forge.Utilities;
 using UnityEngine;

@@ -5,7 +5,7 @@ namespace Forge.Player {
     // Slower run, committed jumps (spamming isn't ideal), ground dodging
     // getting knocked back when hit, etc
 
-    [RequireComponent(typeof(Rigid2DBody), typeof(PlayerInputReader))]
+    [RequireComponent(typeof(Rigidbody2D), typeof(PlayerInputReader))]
 
     public class PlayerController : MonoBehaviour {
         [Header("Run")]

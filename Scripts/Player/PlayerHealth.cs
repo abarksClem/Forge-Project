@@ -8,9 +8,9 @@ using Forge.Enemies;
 namespace Forge.Player {
     // Health, health pots, i-frames, deaths, and respawning all handled here
 
-    [RequireComponent(typeof(PlayerContoller))]
+    [RequireComponent(typeof(PlayerController))]
 
-    public class PlayerHealth : MonoBehaviour, IDamagable {
+    public class PlayerHealth : MonoBehaviour, IDamageable {
         [Header("Health")]
         [SerializeField] private int maxHealth = 100;
         [SerializeField] private float hurtInvulnerability = 0.8f;

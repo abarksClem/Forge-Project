@@ -1,6 +1,6 @@
 using System.Numerics;
 using System.Runtime.CompilerServices;
-using System.Threading.Tasks.Dataflow;
+using System.Threading.Tasks.Sources;
 using UnityEngine;
 
 namespace Forge.Player {
@@ -8,7 +8,7 @@ namespace Forge.Player {
 
     public class GuiltMarker : MonoBehaviour {
         private PlayerCurrency owner;
-        private Vector3 basePosition;
+        private UnityEngine.Vector3 basePosition;
         
         public void Init(PlayerCurrency currency) {
             owner = currency;
@@ -16,7 +16,7 @@ namespace Forge.Player {
         }
 
         private void Update() {
-            transform.position = basePosition + Vector3.up * (MathF.Sin(Time.time * 2f) * 0.15f);
+            transform.position = basePosition + UnityEngine.Vector3.up * (Mathf.Sin(Time.time * 2f) * 0.15f);
         }
 
         private void OnTriggerStay2D(Collider2D other) {

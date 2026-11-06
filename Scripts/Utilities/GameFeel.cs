@@ -16,7 +16,7 @@ namespace Forge.Utilities
 
         public static void HitStop(float duration) {
             GameFeel feel = Instance;
-            feel.resumeAt = MathF.Max(feel.resumeAt, Time.unscaledTime + duration);
+            feel.resumeAt = Mathf.Max(feel.resumeAt, Time.unscaledTime + duration);
             Time.timeScale = 0f;
         }
 
