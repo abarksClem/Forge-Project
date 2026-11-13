@@ -1,8 +1,10 @@
 using System.Collections.Generic;
 using System.Configuration.Assemblies;
+using System.Security.Cryptography;
 using Forge.Core;
 using Forge.Player;
 using Forge.Utilities;
+using TMPro.EditorUtilities;
 using UnityEngine;
 
 namespace Forge.Enemies {
@@ -37,6 +39,11 @@ namespace Forge.Enemies {
         [SerializeField] protected SpriteFlash flash;
         [SerializeField] protected LayerMask groundLayer;
         [SerializeField] protected LayerMask playerLayer;
+
+        [Header("Poise")]
+        [SerializeField] private int maxPoise = 25;
+        [SerializeField] private int poiseRecoveryRate = 10;
+        private int poise;
 
         protected Rigidbody2D rb;
         protected Transform player;
@@ -77,6 +84,7 @@ namespace Forge.Enemies {
             spawnPosition = transform.position;
             Health = maxHealth;
             all.Add(this);
+            ResetPoise();
         }
 
         protected virtual void OnDestroy() => all.Remove(this);
@@ -102,18 +110,34 @@ namespace Forge.Enemies {
                 return true;
             }
 
-            if (!HasSuperArmor)
+            bool interrupted = false;
+            if (HasSuperArmor)
+            {
+                poise -= info.PoiseDamage;
+                if (poise <= 0)
+                {
+                    ResetPoise();
+                    interrupted = true;
+                }
+            }
+
+            if (!HasSuperArmor || interrupted)
             {
                 float direction = Mathf.Sign(transform.position.x - info.SourcePosition.x);
-                rb.linearVelocity = new Vector2(direction * knockback.x, knockback.y);
+                rb.linearVelocity = new Vector2(knockback.x * direction, knockback.y);
             }
-            OnHurt();
+
+            if (interrupted) OnInterrupted();
+            else OnHurt();
             return true;
         }
 
         public abstract void OnParried();
         protected virtual void OnHurt() { }
         protected virtual void OnRespawned() { }
+
+        protected void ResetPoise() => poise = maxPoise;
+        protected virtual void OnInterrupted() { }
 
         private void Die()
         {
@@ -138,6 +162,7 @@ namespace Forge.Enemies {
             foreach (SpriteRenderer r in renderers) r.enabled = true;
             if (flash != null) flash.Tint = null;
             OnRespawned();
+            ResetPoise();
         }
     }
 }

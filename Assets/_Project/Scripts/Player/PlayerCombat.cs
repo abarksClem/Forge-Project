@@ -13,6 +13,7 @@ namespace Forge.Player {
         public float active = 0.08f;
         public float recovery = 0.25f;
         public float lunge = 2.5f;
+        public int poiseDamage = 10;
     }
 
     // 3-hit sword combo, kinda standard I feel for games of these nature. Attacks can be cancelled 
@@ -115,7 +116,8 @@ namespace Forge.Player {
                 int damage = riposte ? attack.damage * riposteMultiplier : attack.damage;
                 for (float t = 0f; t < attack.active; t += Time.deltaTime)
                 {
-                    DoHits(damage, riposte);
+                    int poise = riposte ? attack.poiseDamage * 2 : attack.poiseDamage;
+                    DoHits(damage, poise, riposte);
                     yield return null;
                 }
                 if (slash != null) slash.enabled = false;
@@ -140,7 +142,7 @@ namespace Forge.Player {
             EndAction();
         }
 
-        private void DoHits(int damage, bool riposte)
+        private void DoHits(int damage, int poise, bool riposte)
         {
             Vector2 center = (Vector2)transform.position + new Vector2(hitboxOffset.x * controller.Facing, hitboxOffset.y);
             foreach (Collider2D hit in Physics2D.OverlapBoxAll(center, hitboxSize, 0f, hitLayers))
@@ -148,7 +150,7 @@ namespace Forge.Player {
                 var target = hit.GetComponentInParent<IDamageable>();
                 if (target == null || !hitThisSwing.Add(target)) continue;
 
-                if (target.TakeDamage(new DamageInfo(damage, transform.position, gameObject)))
+                if (target.TakeDamage(new DamageInfo(damage, transform.position, gameObject, false, poise)))
                 {
                     GameFeel.HitStop(riposte ? 0.15f : 0.05f);
                     GameFeel.Shake(riposte ? 0.25f : 0.08f, 0.12f);

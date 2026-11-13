@@ -9,13 +9,15 @@ namespace Forge.Core {
         public readonly UnityEngine.Vector2 SourcePosition;
         public readonly GameObject Source;
         public readonly bool Parryable;
+        public readonly int PoiseDamage;
 
-        public DamageInfo(int amount, UnityEngine.Vector2 sourcePosition, GameObject source, bool parryable = false)
+        public DamageInfo(int amount, UnityEngine.Vector2 sourcePosition, GameObject source, bool parryable = false, int poiseDamage = -1)
         {
             Amount = amount;
             SourcePosition = sourcePosition;
             Source = source;
             Parryable = parryable;
+            PoiseDamage = poiseDamage < 0 ? amount : poiseDamage;
         }
     }
 

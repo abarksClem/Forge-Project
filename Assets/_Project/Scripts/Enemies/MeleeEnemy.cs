@@ -1,5 +1,6 @@
 using Forge.Core;
 using UnityEngine;
+using Forge.Utilities;
 
 namespace Forge.Enemies
 {
@@ -36,6 +37,8 @@ namespace Forge.Enemies
         [SerializeField] private float hurtTime = 0.25f;
         [SerializeField] private float staggerTime = 1.5f;
         [SerializeField] private Color staggerColor = new Color(0.6f, 0.5f, 1f);
+        [SerializeField] private float interruptStunTime = 0.6f;
+
 
         private State state;
         private float timer;
@@ -133,6 +136,7 @@ namespace Forge.Enemies
             {
                 case State.Windup:
                     timer = windupTime;
+                    ResetPoise();
                     if (flash != null) flash.Tint = tellColor;
                     break;
                 case State.Attack:
@@ -168,6 +172,14 @@ namespace Forge.Enemies
             if (IsDead) return;
             Enter(State.Stagger);
             SetSpeed(-facing * 3f);
+        }
+
+        protected override void OnInterrupted()
+        {
+            Enter(State.Hurt);
+            timer = interruptStunTime;
+            GameFeel.HitStop(0.08f);
+            if (flash != null) flash.Flash(new Color(1f, 0.9f, 0.4F), 0.15f);
         }
 
         protected override void OnHurt()
